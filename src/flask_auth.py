@@ -6,6 +6,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from pathlib import Path
+from functools import wraps
 
 class User(UserMixin):
     """User class for Flask-Login"""
@@ -166,17 +167,20 @@ def require_auth(f):
     """Decorator to require authentication"""
     return login_required(f)
 
-def require_role(*roles):
-    """Decorator to require specific role(s)"""
+
+
+def require_role(*required_roles):
+    """Decorator to require specific roles for access"""
     def decorator(f):
-        @login_required
+        @wraps(f)  # This is crucial - it preserves the original function name
         def decorated_function(*args, **kwargs):
-            if current_user.role not in roles and not current_user.is_admin():
-                from flask import jsonify
-                return jsonify({
-                    'error': 'Insufficient permissions',
-                    'message': f'Role {current_user.role} not allowed'
-                }), 403
+            user = get_current_user()
+            if not user:
+                return jsonify({'error': 'Authentication required'}), 401
+            
+            if user.role not in required_roles:
+                return jsonify({'error': 'Insufficient permissions'}), 403
+            
             return f(*args, **kwargs)
         return decorated_function
     return decorator

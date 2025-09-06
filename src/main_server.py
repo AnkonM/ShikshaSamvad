@@ -36,6 +36,12 @@ def create_app():
     # Create default admin user if it doesn't exist
     create_default_admin(auth_manager)
     
+    # DEBUG: Print routes after auth setup
+    print("\n=== Routes after auth setup ===")
+    for rule in app.url_map.iter_rules():
+        print(f"  {rule.methods} {rule.rule} -> {rule.endpoint}")
+    print("=" * 40)
+    
     # Register chatbot routes
     @app.route('/api/chatbot/chat', methods=['POST'])
     @require_auth
@@ -50,6 +56,12 @@ def create_app():
         """Analyze endpoint with authentication"""
         from src.chatbot.server import analyze as chatbot_analyze
         return chatbot_analyze()
+    
+    # DEBUG: Print routes after chatbot setup
+    print("\n=== Routes after chatbot setup ===")
+    for rule in app.url_map.iter_rules():
+        print(f"  {rule.methods} {rule.rule} -> {rule.endpoint}")
+    print("=" * 40)
     
     # Dashboard API endpoints
     @app.route('/api/dashboard/risk-data', methods=['GET'])
@@ -102,8 +114,17 @@ def create_app():
         finally:
             conn.close()
     
+    # DEBUG: Print routes before risk endpoints
+    print("\n=== Routes before risk endpoints ===")
+    for rule in app.url_map.iter_rules():
+        if 'risk' in rule.rule:
+            print(f"  EXISTING RISK ROUTE: {rule.methods} {rule.rule} -> {rule.endpoint}")
+    print("=" * 40)
+    
     # Risk engine endpoints
-    @app.route('/api/risk/predict', methods=['POST'])
+    print("About to register /api/risk/predict route...")
+    
+    @app.route('/api/risk/predict', methods=['POST'], endpoint='predict_risk_main')
     @require_role('counselor', 'admin')
     def predict_risk():
         """Generate risk predictions (counselor/admin only)"""
@@ -122,6 +143,8 @@ def create_app():
                 'error': 'Prediction failed',
                 'message': str(e)
             }), 500
+    
+    print("Successfully registered /api/risk/predict route!")
     
     @app.route('/api/risk/train', methods=['POST'])
     @require_role('admin')
@@ -159,6 +182,12 @@ def create_app():
             'service': 'shikshasamvaad-main',
             'version': '1.0.0'
         })
+    
+    # DEBUG: Print all final routes
+    print("\n=== All final routes ===")
+    for rule in app.url_map.iter_rules():
+        print(f"  {rule.methods} {rule.rule} -> {rule.endpoint}")
+    print("=" * 40)
     
     return app
 
