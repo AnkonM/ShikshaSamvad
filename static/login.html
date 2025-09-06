@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ShikshaSamvad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+            <div>
+                <a href="landing-page.html" class="flex justify-center">
+                    <svg class="h-12 w-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 8.33331C26.9167 8.33331 8.33337 26.9166 8.33337 50C8.33337 73.0833 26.9167 91.6666 50 91.6666C73.0834 91.6666 91.6667 73.0833 91.6667 50C91.6667 26.9166 73.0834 8.33331 50 8.33331Z" fill="url(#paint0_linear_1_2)" fill-opacity="0.1"/>
+                        <path d="M54.1667 37.5V25H45.8334V37.5H54.1667ZM63.5417 42.1875L72.2917 33.4375L66.5625 27.7083L57.8125 36.4583L63.5417 42.1875ZM36.4584 42.1875L42.1875 36.4583L33.4375 27.7083L27.7084 33.4375L36.4584 42.1875ZM50 60.4167C46.7292 60.4167 43.75 58.7396 41.6667 56.25H58.3334C56.25 58.7396 53.2709 60.4167 50 60.4167ZM48.6979 52.0833C49.1146 52.1875 49.5313 52.2396 50 52.2396C50.4688 52.2396 50.8854 52.1875 51.3021 52.0833C52.1354 51.9271 52.8646 51.5625 53.4375 51.0417C54.0104 50.5208 54.375 49.7917 54.375 48.9583C54.375 47.7604 53.4375 46.8229 52.2396 46.8229C51.0417 46.8229 50.1042 47.7604 50.1042 48.9583C50.1042 49.0625 50.1042 49.1667 50.1563 49.2708L42.0834 57.3437C44.4792 60.8333 48.4896 63.3333 53.125 64.2187V70.8333H57.2917V75H42.7084V70.8333H46.875V64.2187C40.6771 63.125 35.4167 57.8646 35.4167 51.0417C35.4167 43.125 41.875 36.6667 49.7917 36.6667C57.7084 36.6667 64.1667 43.125 64.1667 51.0417C64.1667 54.4792 62.9167 57.6562 60.9896 60.0521L55.9375 55C56.0938 54.3229 56.25 53.6458 56.25 52.9167C56.25 51.1979 55.5729 49.6875 54.4792 48.5937C53.3854 47.5 51.875 46.8229 50.1563 46.8229C48.4375 46.8229 46.9271 47.5 45.8334 48.5937C44.7396 49.6875 44.0625 51.1979 44.0625 52.9167C44.0625 53.6458 44.2188 54.3229 44.375 55L48.6979 52.0833Z" fill="url(#paint1_linear_1_2)"/>
+                        <defs>
+                            <linearGradient id="paint0_linear_1_2" x1="50" y1="8.33331" x2="50" y2="91.6666" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#22c55e"/>
+                            <stop offset="1" stop-color="#15803d"/>
+                            </linearGradient>
+                            <linearGradient id="paint1_linear_1_2" x1="50" y1="25" x2="50" y2="75" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#f97316"/>
+                            <stop offset="1" stop-color="#ea580c"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </a>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-slate-900">
+                    Log in to your account
+                </h2>
+            </div>
+            <form id="login-form" class="mt-8 space-y-6" action="#" method="POST">
+                 <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">Invalid email or password. Please try again.</span>
+                </div>
+                <div class="rounded-md shadow-sm space-y-4">
+                    <div>
+                        <label for="email-address" class="sr-only">Email address</label>
+                        <input id="email-address" name="email" type="email" autocomplete="email" required class="appearance-none rounded-md relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-500 text-slate-900 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Email address">
+                    </div>
+                    <div class="relative">
+                        <label for="password" class="sr-only">Password</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded-md relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-500 text-slate-900 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Password">
+                        <div id="toggle-password-visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer">
+                            <!-- New Open Eye Icon -->
+                            <svg id="eye-open" class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                             <!-- New Closed Eye Icon -->
+                            <svg id="eye-closed" class="h-6 w-6 text-slate-400 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.243 4.243L6.879 6.879" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-green-600 focus:ring-green-500 border-slate-300 rounded">
+                    <label for="remember-me" class="ml-2 block text-sm text-slate-900">
+                        Remember me
+                    </label>
+                </div>
+
+                <div>
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Log in
+                    </button>
+                </div>
+            </form>
+             <div class="text-center text-sm text-slate-600 mt-4">
+                <p>
+                    Don't have an account?
+                    <a href="signup.html" class="font-medium text-green-600 hover:text-green-500">
+                        Start your journey with us
+                    </a>
+                </p>
+            </div>
+             <div class="text-center text-sm text-slate-600 mt-4">
+                 <a href="landing-page.html" class="font-medium text-slate-500 hover:text-slate-700 inline-flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.getElementById('toggle-password-visibility');
+        const passwordInput = document.getElementById('password');
+        const eyeOpen = document.getElementById('eye-open');
+        const eyeClosed = document.getElementById('eye-closed');
+
+        togglePassword.addEventListener('click', function() {
+            // Toggle the type attribute
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Toggle the eye icon
+            eyeOpen.classList.toggle('hidden');
+            eyeClosed.classList.toggle('hidden');
+        });
+
+        // Handle form submission
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email-address').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember-me').checked;
+            const errorDiv = document.getElementById('error-message');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // Important for session cookies
+                    body: JSON.stringify({ 
+                        email, 
+                        password, 
+                        remember: remember 
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    // Store user info in localStorage for dashboard access
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const errorData = await response.json();
+                    errorDiv.textContent = errorData.message || 'Login failed. Please try again.';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Network error. Please check your connection.';
+                errorDiv.classList.remove('hidden');
+            }
+        });
+    </script>
+
+</body>
+
+</html>

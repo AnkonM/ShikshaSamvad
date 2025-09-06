@@ -27,14 +27,20 @@ def setup_simple_auth():
     
     # Generate sample data
     print("📈 Generating sample data...")
-    from scripts.generate_lms_data import main as generate_data
-    generate_data()
+    import subprocess
+    import sys
+    import os
+    
+    # Set PYTHONPATH for subprocess calls
+    env = os.environ.copy()
+    env['PYTHONPATH'] = str(Path.cwd())
+    
+    subprocess.run([sys.executable, "scripts/generate_lms_data.py"], check=True, env=env)
     print("✅ Sample data generated")
     
     # Ingest data
     print("💾 Ingesting data...")
-    from scripts.ingest_lms_data import main as ingest_data
-    ingest_data()
+    subprocess.run([sys.executable, "scripts/ingest_lms_data.py"], check=True, env=env)
     print("✅ Data ingested")
     
     print("\n🎉 Simple authentication system is ready!")

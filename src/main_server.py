@@ -2,7 +2,7 @@
 """
 Main server integrating all ShikshaSamvad services with simple authentication
 """
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sys
 from pathlib import Path
@@ -11,21 +11,21 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-from src.simple_auth import SimpleAuth
-from src.simple_auth_api import auth_bp
+from src.flask_auth import auth_manager, require_auth, require_role, get_current_user
+from src.flask_auth_api import auth_bp
 from src.chatbot.server import app as chatbot_app
 from src.database.sqlite_db import init_db
 
 def create_app():
     """Create the main Flask application"""
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='../static', static_url_path='')
     app.secret_key = 'shikshasamvaad-secret-key-change-in-production'
     
-    # Enable CORS
-    CORS(app, origins=['http://localhost:3000', 'http://localhost:8501'], supports_credentials=True)
+    # Enable CORS for frontend
+    CORS(app, origins=['http://localhost:3000', 'http://localhost:8501', 'http://localhost:5000'], supports_credentials=True)
     
-    # Initialize simple authentication
-    auth = SimpleAuth(app)
+    # Initialize Flask-Login authentication
+    auth_manager.init_app(app)
     
     # Register authentication blueprint
     app.register_blueprint(auth_bp)
@@ -34,18 +34,18 @@ def create_app():
     init_db("sqlite:///data/processed/shikshasamvaad.db", "src/database/schema.sql")
     
     # Create default admin user if it doesn't exist
-    create_default_admin(auth)
+    create_default_admin(auth_manager)
     
     # Register chatbot routes
     @app.route('/api/chatbot/chat', methods=['POST'])
-    @auth.require_auth
+    @require_auth
     def chat():
         """Chat endpoint with authentication"""
         from src.chatbot.server import chat as chatbot_chat
         return chatbot_chat()
     
     @app.route('/api/chatbot/analyze', methods=['POST'])
-    @auth.require_auth
+    @require_auth
     def analyze():
         """Analyze endpoint with authentication"""
         from src.chatbot.server import analyze as chatbot_analyze
@@ -53,33 +53,33 @@ def create_app():
     
     # Dashboard API endpoints
     @app.route('/api/dashboard/risk-data', methods=['GET'])
-    @auth.require_auth
+    @require_auth
     def get_risk_data():
         """Get risk data based on user role"""
         import pandas as pd
         from pathlib import Path
         
-        user = auth.get_current_user()
+        user = get_current_user()
         pred_path = Path("data/processed/risk_predictions.csv")
         
         if pred_path.exists():
             df = pd.read_csv(pred_path)
             
             # Role-based filtering
-            if user['role'] == 'student':
+            if user.role == 'student':
                 # Students see only their own data
-                df = df[df['student_id'] == user.get('student_id', '')]
-            elif user['role'] == 'counselor':
+                df = df[df['student_id'] == user.student_id or '']
+            elif user.role == 'counselor':
                 # Counselors see assigned students (simplified - all for now)
                 pass
-            elif user['role'] == 'faculty':
+            elif user.role == 'faculty':
                 # Faculty see class data (simplified - all for now)
                 pass
             # Admin sees all data
             
             return jsonify({
                 'risk_data': df.to_dict('records'),
-                'user_role': user['role']
+                'user_role': user.role
             })
         else:
             return jsonify({
@@ -88,10 +88,10 @@ def create_app():
             }), 404
     
     @app.route('/api/dashboard/students', methods=['GET'])
-    @auth.require_role('counselor', 'faculty', 'admin')
+    @require_role('counselor', 'faculty', 'admin')
     def get_students():
         """Get students list (counselor/faculty/admin only)"""
-        conn = auth.get_db_connection()
+        conn = auth_manager.get_db_connection()
         try:
             students = conn.execute(
                 'SELECT id, email, first_name, last_name, role, student_id FROM users WHERE role = "student"'
@@ -104,7 +104,7 @@ def create_app():
     
     # Risk engine endpoints
     @app.route('/api/risk/predict', methods=['POST'])
-    @auth.require_role('counselor', 'admin')
+    @require_role('counselor', 'admin')
     def predict_risk():
         """Generate risk predictions (counselor/admin only)"""
         try:
@@ -124,7 +124,7 @@ def create_app():
             }), 500
     
     @app.route('/api/risk/train', methods=['POST'])
-    @auth.require_role('admin')
+    @require_role('admin')
     def train_model():
         """Train risk prediction model (admin only)"""
         try:
@@ -142,6 +142,15 @@ def create_app():
                 'message': str(e)
             }), 500
     
+    # Serve static files
+    @app.route('/')
+    def index():
+        return send_from_directory(app.static_folder, 'landing-page.html')
+    
+    @app.route('/<path:filename>')
+    def static_files(filename):
+        return send_from_directory(app.static_folder, filename)
+    
     # Health check
     @app.route('/api/health', methods=['GET'])
     def health():
@@ -153,16 +162,16 @@ def create_app():
     
     return app
 
-def create_default_admin(auth):
+def create_default_admin(auth_manager):
     """Create default admin user if it doesn't exist"""
-    conn = auth.get_db_connection()
+    conn = auth_manager.get_db_connection()
     try:
         admin_exists = conn.execute(
             'SELECT id FROM users WHERE email = ?', ('admin@shikshasamvaad.com',)
         ).fetchone()
         
         if not admin_exists:
-            auth.create_user(
+            auth_manager.create_user(
                 email='admin@shikshasamvaad.com',
                 password='admin123',
                 role='admin',
@@ -176,7 +185,7 @@ def create_default_admin(auth):
 def main():
     """Run the main server"""
     print("🚀 Starting ShikshaSamvad Main Server...")
-    print("📊 Authentication: Simple session-based")
+    print("📊 Authentication: Flask-Login based")
     print("🔗 Services: Chatbot, Dashboard, Risk Engine")
     print("🌐 CORS: Enabled for localhost:3000 and localhost:8501")
     

@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from .nlu_model import SentimentAnalyzer
 from .crisis_detector import detect_crisis
-from ..simple_auth import require_auth, get_current_user
+from ..flask_auth import require_auth, get_current_user
 
 app = Flask(__name__)
 sentiment = SentimentAnalyzer()
