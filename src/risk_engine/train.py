@@ -2,8 +2,18 @@ from pathlib import Path
 import pandas as pd
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-from .bnn_model import SimpleBNN
-from .preprocess import add_last_activity_days, select_features
+
+# Handle both relative and absolute imports
+try:
+    from .bnn_model import SimpleBNN
+    from .preprocess import add_last_activity_days, select_features
+except ImportError:
+    # When running directly, use absolute imports
+    import sys
+    from pathlib import Path
+    sys.path.append(str(Path(__file__).parent.parent.parent))
+    from src.risk_engine.bnn_model import SimpleBNN
+    from src.risk_engine.preprocess import add_last_activity_days, select_features
 
 def train_dummy(input_path: str, model_dir: str) -> None:
     df = pd.read_csv(input_path)
