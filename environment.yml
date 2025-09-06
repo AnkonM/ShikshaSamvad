@@ -1,4 +1,4 @@
-name: shikshasamvaad
+name: shikshasamvad
 channels:
   - conda-forge
 dependencies:
