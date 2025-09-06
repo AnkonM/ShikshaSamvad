@@ -1,0 +1,10 @@
+app:
+  name: Shikshasamvaad Dashboard
+  entrypoint: src/dashboard/streamlit_app.py
+  python_version: "3.11"
+  commands:
+    prelaunch:
+      - pip install -r requirements.txt
+      - python scripts/generate_lms_data.py
+      - python src/risk_engine/train.py
+      - python src/risk_engine/predict.py

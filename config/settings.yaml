@@ -1,0 +1,31 @@
+app:
+  name: Shikshasamvaad
+  environment: development
+  log_level: INFO
+
+data:
+  raw_path: data/raw/lms_data.csv
+  processed_path: data/processed/processed_lms.parquet
+
+risk_engine:
+  model_dir: models/risk_engine
+  features:
+    - attendance
+    - avg_grade
+    - submissions
+    - last_activity_days
+
+chatbot:
+  language: en
+  enable_crisis_detection: true
+
+database:
+  backend: sqlite
+  sqlite:
+    uri: sqlite:///data/processed/shikshasamvaad.db
+  firebase:
+    credentials_path: config/firebase_config.json
+
+dashboard:
+  host: 0.0.0.0
+  port: 8501

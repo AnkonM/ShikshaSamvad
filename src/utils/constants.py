@@ -1,0 +1,1 @@
+CRISIS_TERMS = ["hopeless", "suicide", "self-harm", "drop out", "give up", "end it"]

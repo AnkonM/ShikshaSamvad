@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  chatbot:
+    build:
+      context: ..
+      dockerfile: deployments/Dockerfile
+    command: bash -lc "python src/chatbot/server.py"
+    ports:
+      - "5001:5001"
+    volumes:
+      - ..:/app
+  dashboard:
+    build:
+      context: ..
+      dockerfile: deployments/Dockerfile
+    command: bash -lc "streamlit run src/dashboard/streamlit_app.py --server.port=8501 --server.address=0.0.0.0"
+    ports:
+      - "8501:8501"
+    volumes:
+      - ..:/app

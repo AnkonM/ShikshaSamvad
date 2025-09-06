@@ -1,0 +1,22 @@
+version: "3.1"
+nlu:
+  - intent: greet
+    examples: |
+      - hello
+      - hi
+      - hey
+  - intent: stress_check
+    examples: |
+      - I feel stressed
+      - I'm overwhelmed
+      - too much pressure
+  - intent: cope_tips
+    examples: |
+      - tips to cope
+      - how to manage stress
+      - mindfulness ideas
+  - intent: crisis_help
+    examples: |
+      - I want to give up
+      - I feel hopeless
+      - I want to end it
