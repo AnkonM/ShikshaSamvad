@@ -1,31 +1,69 @@
 # ShikshaSamvad
-Shikshasamvaad: AI/ML-based Student Dropout Prediction and Counseling
+AI/ML-based Student Dropout Prediction and Counseling Platform
 
-Overview
-Shikshasamvaad is an integrated platform for early detection of student dropout risk and continuous well-being support. It combines a Bayesian Neural Network risk assessment engine, an NLP counseling chatbot, and a faculty-facing wellness dashboard. The system supports SQLite for lightweight deployments and Firebase for cloud-based real-time sync.
+## Overview
+ShikshaSamvad is an integrated platform for early detection of student dropout risk and continuous well-being support. It combines a Bayesian Neural Network risk assessment engine, an NLP counseling chatbot, and a role-based wellness dashboard with simple authentication.
 
-Key Components
-- AI Risk Assessment Engine: Bayesian Neural Network predicting dropout probability with uncertainty intervals, trained on attendance, grades, engagement, and activity features.
-- NLP Counselling Chatbot: Built with Rasa and Hugging Face models, exposed via a Flask API. Provides CBT-inspired tips, mindfulness, and crisis escalation.
-- Wellness Dashboard: Streamlit app visualizing risk trends, anonymized IDs, alerts, and monthly reports.
-- Database Layer: SQLite and Firebase connectors for persistence and synchronization.
+## Key Components
+- **AI Risk Assessment Engine**: Bayesian Neural Network predicting dropout probability with uncertainty intervals
+- **NLP Counseling Chatbot**: Flask API providing CBT-inspired tips, mindfulness, and crisis escalation
+- **Wellness Dashboard**: Streamlit app with role-based access (Student, Counselor, Faculty, Admin)
+- **Simple Authentication**: Session-based auth with role-based permissions
+- **Database**: SQLite for lightweight deployment
 
-Getting Started
-1) Environment:
-- Conda: conda env create -f environment.yml && conda activate shikshasamvaad
-- Pip: python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+## Quick Start
 
-2) Generate sample data:
-- python scripts/generate_lms_data.py
+### 1. Setup Environment
+```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-3) Ingest data:
-- python scripts/ingest_lms_data.py --backend sqlite
+# Install dependencies
+pip install -r requirements.txt
+```
 
-4) Run services:
-- bash scripts/run_chatbot.sh
-- bash scripts/run_dashboard.sh
+### 2. Initialize System
+```bash
+# Setup authentication and generate sample data
+python scripts/setup_simple_auth.py
+```
 
-Notes
-- Replace credentials in config/firebase_config.json before enabling Firebase.
-- Rasa config in config/rasa_config.yml; intents in src/chatbot/rasa/.
-- Modules are skeletons; fill implementations under src/.
+### 3. Start Services
+```bash
+# Terminal 1 - Main API server
+python src/main_server.py
+
+# Terminal 2 - Dashboard
+streamlit run src/dashboard/streamlit_app.py
+```
+
+### 4. Access the Platform
+- **API**: http://localhost:5000
+- **Dashboard**: http://localhost:8501
+- **Default Admin**: admin@shikshasamvaad.com / admin123
+
+## User Roles
+- **Student**: View own data, chat with bot
+- **Counselor**: View assigned students, access chat logs
+- **Faculty**: View class reports, student alerts
+- **Admin**: Full system access, user management
+
+## API Endpoints
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `POST /api/chatbot/chat` - Chat with bot
+- `GET /api/dashboard/risk-data` - Get risk data
+- `POST /api/risk/predict` - Generate predictions
+
+## Documentation
+- [Simple Authentication Guide](docs/SIMPLE_AUTH.md)
+- [API Documentation](docs/API.md)
+
+## Features
+- ✅ Simple session-based authentication
+- ✅ Role-based access control
+- ✅ Real-time risk prediction
+- ✅ Interactive chatbot
+- ✅ Comprehensive dashboard
+- ✅ SQLite database (no external dependencies)
