@@ -5,7 +5,7 @@ from .visualizations import risk_distribution, attendance_vs_risk
 import requests
 import json
 
-st.set_page_config(page_title="Shikshasamvaad Dashboard", layout="wide")
+st.set_page_config(page_title="Shikshasamvad Dashboard", layout="wide")
 
 # Simple authentication check
 if 'user' not in st.session_state:
@@ -61,7 +61,7 @@ if 'user' not in st.session_state:
 
 # Main dashboard content
 user = st.session_state.user
-st.title(f"Shikshasamvaad Wellness Dashboard - Welcome {user['first_name']}!")
+st.title(f"Shikshasamvad Wellness Dashboard - Welcome {user['first_name']}!")
 
 # Logout button
 if st.button("Logout"):

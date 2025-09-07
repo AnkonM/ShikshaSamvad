@@ -1,5 +1,5 @@
 app:
-  name: Shikshasamvaad
+  name: Shikshasamvad
   environment: development
   log_level: INFO
 
@@ -22,7 +22,7 @@ chatbot:
 database:
   backend: sqlite
   sqlite:
-    uri: sqlite:///data/processed/shikshasamvaad.db
+    uri: sqlite:///data/processed/shikshasamvad.db
   firebase:
     credentials_path: config/firebase_config.json
 

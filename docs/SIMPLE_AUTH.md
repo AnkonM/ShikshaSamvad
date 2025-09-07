@@ -42,7 +42,7 @@ streamlit run src/dashboard/streamlit_app.py
 
 ## Default Credentials
 
-- **Email**: admin@shikshasamvaad.com
+- **Email**: admin@shikshasamvad.com
 - **Password**: admin123
 
 ## API Endpoints

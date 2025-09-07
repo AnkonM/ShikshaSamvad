@@ -59,7 +59,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", default="data/raw/lms_data.csv")
     ap.add_argument("--backend", choices=["sqlite","firebase"], default="sqlite")
-    ap.add_argument("--sqlite_uri", default="sqlite:///data/processed/shikshasamvaad.db")
+    ap.add_argument("--sqlite_uri", default="sqlite:///data/processed/shikshasamvad.db")
     ap.add_argument("--firebase_credentials", default="config/firebase_config.json")
     ap.add_argument("--schema", default="src/database/schema.sql")
     args = ap.parse_args()

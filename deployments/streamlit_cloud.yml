@@ -1,5 +1,5 @@
 app:
-  name: Shikshasamvaad Dashboard
+  name: Shikshasamvad Dashboard
   entrypoint: src/dashboard/streamlit_app.py
   python_version: "3.11"
   commands:

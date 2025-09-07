@@ -3,4 +3,4 @@ set -euo pipefail
 export PYTHONPATH="$(pwd)"
 python src/chatbot/server.py
 EOF
-chmod +x /workspace/Shikshasamvaad/scripts/run_chatbot.sh
+chmod +x /workspace/Shikshasamvad/scripts/run_chatbot.sh

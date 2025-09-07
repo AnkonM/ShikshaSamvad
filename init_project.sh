@@ -1,12 +1,12 @@
-mkdir -p /workspace/Shikshasamvaad/{config,data/raw,data/processed,notebooks,src/{risk_engine,chatbot/rasa,dashboard,database,utils},scripts,tests,deployments,models/risk_engine}
-touch /workspace/Shikshasamvaad/src/{__init__.py,risk_engine/__init__.py,chatbot/__init__.py,dashboard/__init__.py,database/__init__.py,utils/__init__.py}
+mkdir -p /workspace/Shikshasamvad/{config,data/raw,data/processed,notebooks,src/{risk_engine,chatbot/rasa,dashboard,database,utils},scripts,tests,deployments,models/risk_engine}
+touch /workspace/Shikshasamvad/src/{__init__.py,risk_engine/__init__.py,chatbot/__init__.py,dashboard/__init__.py,database/__init__.py,utils/__init__.py}
 
 # README
-cat > /workspace/Shikshasamvaad/README.md << 'EOF'
-Shikshasamvaad: AI/ML-based Student Dropout Prediction and Counseling
+cat > /workspace/Shikshasamvad/README.md << 'EOF'
+Shikshasamvad: AI/ML-based Student Dropout Prediction and Counseling
 
 Overview
-Shikshasamvaad is an integrated platform for early detection of student dropout risk and continuous well-being support. It combines a Bayesian Neural Network risk assessment engine, an NLP counseling chatbot, and a faculty-facing wellness dashboard. The system supports SQLite for lightweight deployments and Firebase for cloud-based real-time sync.
+Shikshasamvad is an integrated platform for early detection of student dropout risk and continuous well-being support. It combines a Bayesian Neural Network risk assessment engine, an NLP counseling chatbot, and a faculty-facing wellness dashboard. The system supports SQLite for lightweight deployments and Firebase for cloud-based real-time sync.
 
 Key Components
 - AI Risk Assessment Engine: Bayesian Neural Network predicting dropout probability with uncertainty intervals, trained on attendance, grades, engagement, and activity features.
@@ -16,7 +16,7 @@ Key Components
 
 Getting Started
 1) Environment:
-- Conda: conda env create -f environment.yml && conda activate shikshasamvaad
+- Conda: conda env create -f environment.yml && conda activate shikshasamvad
 - Pip: python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
 
 2) Generate sample data:
@@ -36,7 +36,7 @@ Notes
 EOF
 
 # .gitignore
-cat > /workspace/Shikshasamvaad/.gitignore << 'EOF'
+cat > /workspace/Shikshasamvad/.gitignore << 'EOF'
 __pycache__/
 *.py[cod]
 *.pyo
@@ -67,7 +67,7 @@ Thumbs.db
 EOF
 
 # requirements.txt
-cat > /workspace/Shikshasamvaad/requirements.txt << 'EOF'
+cat > /workspace/Shikshasamvad/requirements.txt << 'EOF'
 pandas>=2.0.0
 numpy>=1.24.0
 scikit-learn>=1.3.0
@@ -102,8 +102,8 @@ pytest-cov>=5.0.0
 EOF
 
 # environment.yml
-cat > /workspace/Shikshasamvaad/environment.yml << 'EOF'
-name: shikshasamvaad
+cat > /workspace/Shikshasamvad/environment.yml << 'EOF'
+name: shikshasamvad
 channels:
   - conda-forge
 dependencies:
@@ -114,9 +114,9 @@ dependencies:
 EOF
 
 # Configs
-cat > /workspace/Shikshasamvaad/config/settings.yaml << 'EOF'
+cat > /workspace/Shikshasamvad/config/settings.yaml << 'EOF'
 app:
-  name: Shikshasamvaad
+  name: Shikshasamvad
   environment: development
   log_level: INFO
 
@@ -139,7 +139,7 @@ chatbot:
 database:
   backend: sqlite
   sqlite:
-    uri: sqlite:///data/processed/shikshasamvaad.db
+    uri: sqlite:///data/processed/shikshasamvad.db
   firebase:
     credentials_path: config/firebase_config.json
 
@@ -148,7 +148,7 @@ dashboard:
   port: 8501
 EOF
 
-cat > /workspace/Shikshasamvaad/config/firebase_config.json << 'EOF'
+cat > /workspace/Shikshasamvad/config/firebase_config.json << 'EOF'
 {
   "type": "service_account",
   "project_id": "REPLACE_ME",
@@ -163,7 +163,7 @@ cat > /workspace/Shikshasamvaad/config/firebase_config.json << 'EOF'
 }
 EOF
 
-cat > /workspace/Shikshasamvaad/config/rasa_config.yml << 'EOF'
+cat > /workspace/Shikshasamvad/config/rasa_config.yml << 'EOF'
 language: en
 pipeline:
   - name: WhitespaceTokenizer
@@ -178,18 +178,18 @@ policies:
 EOF
 
 # Notebooks (minimal JSON)
-cat > /workspace/Shikshasamvaad/notebooks/risk_prediction.ipynb << 'EOF'
+cat > /workspace/Shikshasamvad/notebooks/risk_prediction.ipynb << 'EOF'
 {"cells":[{"cell_type":"markdown","metadata":{},"source":["# Risk Prediction Notebook\n","Skeleton for BNN experiments.\n"]}],"metadata":{"kernelspec":{"display_name":"Python 3","language":"python","name":"python3"},"language_info":{"name":"python"}},"nbformat":4,"nbformat_minor":5}
 EOF
-cat > /workspace/Shikshasamvaad/notebooks/bnn_experiments.ipynb << 'EOF'
+cat > /workspace/Shikshasamvad/notebooks/bnn_experiments.ipynb << 'EOF'
 {"cells":[{"cell_type":"markdown","metadata":{},"source":["# BNN Experiments\n","Hyperparameters and uncertainty analysis.\n"]}],"metadata":{"kernelspec":{"display_name":"Python 3","language":"python","name":"python3"},"language_info":{"name":"python"}},"nbformat":4,"nbformat_minor":5}
 EOF
-cat > /workspace/Shikshasamvaad/notebooks/sentiment_analysis.ipynb << 'EOF'
+cat > /workspace/Shikshasamvad/notebooks/sentiment_analysis.ipynb << 'EOF'
 {"cells":[{"cell_type":"markdown","metadata":{},"source":["# Sentiment Analysis Notebook\n","Model sanity checks for NLU.\n"]}],"metadata":{"kernelspec":{"display_name":"Python 3","language":"python","name":"python3"},"language_info":{"name":"python"}},"nbformat":4,"nbformat_minor":5}
 EOF
 
 # Risk Engine stubs
-cat > /workspace/Shikshasamvaad/src/risk_engine/data_loader.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/risk_engine/data_loader.py << 'EOF'
 from pathlib import Path
 import pandas as pd
 
@@ -205,7 +205,7 @@ def save_processed(df: pd.DataFrame, output_path: str) -> None:
     df.to_parquet(out, index=False)
 EOF
 
-cat > /workspace/Shikshasamvaad/src/risk_engine/preprocess.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/risk_engine/preprocess.py << 'EOF'
 import pandas as pd
 from datetime import datetime
 
@@ -220,7 +220,7 @@ def select_features(df: pd.DataFrame) -> pd.DataFrame:
     return df[cols].copy()
 EOF
 
-cat > /workspace/Shikshasamvaad/src/risk_engine/bnn_model.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/risk_engine/bnn_model.py << 'EOF'
 from typing import Tuple
 import torch
 import torch.nn as nn
@@ -260,7 +260,7 @@ def predict_with_uncertainty(model: nn.Module, x: torch.Tensor, num_samples: int
     return mean, lower, upper
 EOF
 
-cat > /workspace/Shikshasamvaad/src/risk_engine/train.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/risk_engine/train.py << 'EOF'
 from pathlib import Path
 import pandas as pd
 import torch
@@ -299,7 +299,7 @@ if __name__ == "__main__":
     train_dummy("data/raw/lms_data.csv", "models/risk_engine")
 EOF
 
-cat > /workspace/Shikshasamvaad/src/risk_engine/predict.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/risk_engine/predict.py << 'EOF'
 from pathlib import Path
 import pandas as pd
 import torch
@@ -329,7 +329,7 @@ if __name__ == "__main__":
 EOF
 
 # Chatbot stubs
-cat > /workspace/Shikshasamvaad/src/chatbot/nlu_model.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/chatbot/nlu_model.py << 'EOF'
 from transformers import pipeline
 
 class SentimentAnalyzer:
@@ -341,7 +341,7 @@ class SentimentAnalyzer:
         return {"label": result["label"], "score": float(result["score"])}
 EOF
 
-cat > /workspace/Shikshasamvaad/src/chatbot/crisis_detector.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/chatbot/crisis_detector.py << 'EOF'
 CRISIS_KEYWORDS = {"hopeless", "suicide", "self-harm", "drop out", "give up", "end it", "kill myself"}
 
 def detect_crisis(text: str) -> bool:
@@ -349,7 +349,7 @@ def detect_crisis(text: str) -> bool:
     return any(keyword in lowered for keyword in CRISIS_KEYWORDS)
 EOF
 
-cat > /workspace/Shikshasamvaad/src/chatbot/server.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/chatbot/server.py << 'EOF'
 from flask import Flask, request, jsonify
 from .nlu_model import SentimentAnalyzer
 from .crisis_detector import detect_crisis
@@ -385,7 +385,7 @@ if __name__ == "__main__":
 EOF
 
 # Rasa basic NLU examples
-cat > /workspace/Shikshasamvaad/src/chatbot/rasa/nlu.yml << 'EOF'
+cat > /workspace/Shikshasamvad/src/chatbot/rasa/nlu.yml << 'EOF'
 version: "3.1"
 nlu:
   - intent: greet
@@ -411,7 +411,7 @@ nlu:
 EOF
 
 # Dashboard stubs
-cat > /workspace/Shikshasamvaad/src/dashboard/visualizations.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/dashboard/visualizations.py << 'EOF'
 import pandas as pd
 import plotly.express as px
 
@@ -422,7 +422,7 @@ def attendance_vs_risk(df: pd.DataFrame):
     return px.scatter(df, x="attendance", y="dropout_risk", title="Attendance vs Dropout Risk")
 EOF
 
-cat > /workspace/Shikshasamvaad/src/dashboard/reports.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/dashboard/reports.py << 'EOF'
 from pathlib import Path
 import pandas as pd
 
@@ -437,19 +437,19 @@ def generate_report_pdf(df: pd.DataFrame, output_path: str) -> str:
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w") as f:
-        f.write("Shikshasamvaad Report (placeholder)\n")
+        f.write("Shikshasamvad Report (placeholder)\n")
         f.write(f"Rows: {len(df)}\n")
     return str(out)
 EOF
 
-cat > /workspace/Shikshasamvaad/src/dashboard/streamlit_app.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/dashboard/streamlit_app.py << 'EOF'
 import streamlit as st
 import pandas as pd
 from pathlib import Path
 from .visualizations import risk_distribution, attendance_vs_risk
 
-st.set_page_config(page_title="Shikshasamvaad Dashboard", layout="wide")
-st.title("Shikshasamvaad Wellness Dashboard")
+st.set_page_config(page_title="Shikshasamvad Dashboard", layout="wide")
+st.title("Shikshasamvad Wellness Dashboard")
 
 pred_path = Path("data/processed/risk_predictions.csv")
 if pred_path.exists():
@@ -466,7 +466,7 @@ else:
 EOF
 
 # Database layer
-cat > /workspace/Shikshasamvaad/src/database/sqlite_db.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/database/sqlite_db.py << 'EOF'
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
@@ -485,7 +485,7 @@ def get_session(uri: str):
     return sessionmaker(bind=engine, future=True)()
 EOF
 
-cat > /workspace/Shikshasamvaad/src/database/firebase_db.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/database/firebase_db.py << 'EOF'
 from pathlib import Path
 from typing import Dict, Any, Optional
 import firebase_admin
@@ -512,7 +512,7 @@ def push_document(collection: str, doc: Dict[str, Any], credentials_path: Option
     return ref[1].id
 EOF
 
-cat > /workspace/Shikshasamvaad/src/database/schema.sql << 'EOF'
+cat > /workspace/Shikshasamvad/src/database/schema.sql << 'EOF'
 CREATE TABLE IF NOT EXISTS students (
   id TEXT PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -550,28 +550,28 @@ CREATE TABLE IF NOT EXISTS journals (
 EOF
 
 # Utils
-cat > /workspace/Shikshasamvaad/src/utils/logger.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/utils/logger.py << 'EOF'
 from loguru import logger
 
-def get_logger(name: str = "Shikshasamvaad"):
+def get_logger(name: str = "Shikshasamvad"):
     logger.remove()
     logger.add(lambda msg: print(msg, end=""), level="INFO")
     return logger.bind(app=name)
 EOF
 
-cat > /workspace/Shikshasamvaad/src/utils/helpers.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/utils/helpers.py << 'EOF'
 import hashlib
 
 def anonymize_id(student_id: str) -> str:
     return hashlib.sha256(student_id.encode("utf-8")).hexdigest()[:10]
 EOF
 
-cat > /workspace/Shikshasamvaad/src/utils/constants.py << 'EOF'
+cat > /workspace/Shikshasamvad/src/utils/constants.py << 'EOF'
 CRISIS_TERMS = ["hopeless", "suicide", "self-harm", "drop out", "give up", "end it"]
 EOF
 
 # Scripts
-cat > /workspace/Shikshasamvaad/scripts/generate_lms_data.py << 'EOF'
+cat > /workspace/Shikshasamvad/scripts/generate_lms_data.py << 'EOF'
 import random
 import pandas as pd
 import datetime
@@ -607,7 +607,7 @@ print(f"Sample LMS data generated -> {out}")
 print(df.head())
 EOF
 
-cat > /workspace/Shikshasamvaad/scripts/ingest_lms_data.py << 'EOF'
+cat > /workspace/Shikshasamvad/scripts/ingest_lms_data.py << 'EOF'
 import argparse
 import pandas as pd
 from pathlib import Path
@@ -628,7 +628,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", default="data/raw/lms_data.csv")
     ap.add_argument("--backend", choices=["sqlite","firebase"], default="sqlite")
-    ap.add_argument("--sqlite_uri", default="sqlite:///data/processed/shikshasamvaad.db")
+    ap.add_argument("--sqlite_uri", default="sqlite:///data/processed/shikshasamvad.db")
     ap.add_argument("--firebase_credentials", default="config/firebase_config.json")
     ap.add_argument("--schema", default="src/database/schema.sql")
     args = ap.parse_args()
@@ -643,43 +643,43 @@ if __name__ == "__main__":
         print("Ingested into Firebase.")
 EOF
 
-cat > /workspace/Shikshasamvaad/scripts/run_chatbot.sh << 'EOF'
+cat > /workspace/Shikshasamvad/scripts/run_chatbot.sh << 'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 export PYTHONPATH="$(pwd)"
 python src/chatbot/server.py
 EOF
-chmod +x /workspace/Shikshasamvaad/scripts/run_chatbot.sh
+chmod +x /workspace/Shikshasamvad/scripts/run_chatbot.sh
 
-cat > /workspace/Shikshasamvaad/scripts/run_dashboard.sh << 'EOF'
+cat > /workspace/Shikshasamvad/scripts/run_dashboard.sh << 'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 export PYTHONPATH="$(pwd)"
 streamlit run src/dashboard/streamlit_app.py --server.port=8501 --server.address=0.0.0.0
 EOF
-chmod +x /workspace/Shikshasamvaad/scripts/run_dashboard.sh
+chmod +x /workspace/Shikshasamvad/scripts/run_dashboard.sh
 
 # Tests
-cat > /workspace/Shikshasamvaad/tests/test_risk_engine.py << 'EOF'
+cat > /workspace/Shikshasamvad/tests/test_risk_engine.py << 'EOF'
 def test_imports():
     from src.risk_engine.data_loader import load_raw_lms  # noqa:F401
     from src.risk_engine.preprocess import add_last_activity_days  # noqa:F401
     from src.risk_engine.bnn_model import SimpleBNN  # noqa:F401
 EOF
 
-cat > /workspace/Shikshasamvaad/tests/test_chatbot.py << 'EOF'
+cat > /workspace/Shikshasamvad/tests/test_chatbot.py << 'EOF'
 def test_crisis_detector():
     from src.chatbot.crisis_detector import detect_crisis
     assert detect_crisis("I feel hopeless") is True
     assert detect_crisis("I'm fine") is False
 EOF
 
-cat > /workspace/Shikshasamvaad/tests/test_dashboard.py << 'EOF'
+cat > /workspace/Shikshasamvad/tests/test_dashboard.py << 'EOF'
 def test_visualization_imports():
     from src.dashboard.visualizations import risk_distribution  # noqa:F401
 EOF
 
-cat > /workspace/Shikshasamvaad/tests/test_database.py << 'EOF'
+cat > /workspace/Shikshasamvad/tests/test_database.py << 'EOF'
 from pathlib import Path
 
 def test_schema_file_exists():
@@ -687,7 +687,7 @@ def test_schema_file_exists():
 EOF
 
 # Deployments
-cat > /workspace/Shikshasamvaad/deployments/Dockerfile << 'EOF'
+cat > /workspace/Shikshasamvad/deployments/Dockerfile << 'EOF'
 FROM python:3.11-slim
 WORKDIR /app
 COPY requirements.txt /app/
@@ -698,7 +698,7 @@ EXPOSE 5001 8501
 CMD ["bash","-lc","python scripts/generate_lms_data.py && python src/risk_engine/train.py && python src/risk_engine/predict.py && streamlit run src/dashboard/streamlit_app.py --server.port=8501 --server.address=0.0.0.0"]
 EOF
 
-cat > /workspace/Shikshasamvaad/deployments/docker-compose.yml << 'EOF'
+cat > /workspace/Shikshasamvad/deployments/docker-compose.yml << 'EOF'
 version: "3.9"
 services:
   chatbot:
@@ -721,9 +721,9 @@ services:
       - ..:/app
 EOF
 
-cat > /workspace/Shikshasamvaad/deployments/streamlit_cloud.yml << 'EOF'
+cat > /workspace/Shikshasamvad/deployments/streamlit_cloud.yml << 'EOF'
 app:
-  name: Shikshasamvaad Dashboard
+  name: Shikshasamvad Dashboard
   entrypoint: src/dashboard/streamlit_app.py
   python_version: "3.11"
   commands:
@@ -735,7 +735,7 @@ app:
 EOF
 
 # Initialize git
-cd /workspace/Shikshasamvaad
+cd /workspace/Shikshasamvad
 git init
 git add .
-git commit -m "Initialize Shikshasamvaad skeleton: configs, src stubs, scripts, tests, deployments"
+git commit -m "Initialize Shikshasamvad skeleton: configs, src stubs, scripts, tests, deployments"

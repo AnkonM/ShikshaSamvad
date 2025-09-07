@@ -8,7 +8,7 @@ import sqlite3
 from pathlib import Path
 
 class SimpleAuth:
-    def __init__(self, app=None, db_path="data/processed/shikshasamvaad.db"):
+    def __init__(self, app=None, db_path="data/processed/shikshasamvad.db"):
         self.db_path = db_path
         self.app = app
         if app:

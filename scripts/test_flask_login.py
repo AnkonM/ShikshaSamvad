@@ -159,7 +159,7 @@ def test_flask_login_integration():
     print("  Role: student")
     
     print("\n🔑 Default Admin Credentials:")
-    print("  Email: admin@shikshasamvaad.com")
+    print("  Email: admin@shikshasamvad.com")
     print("  Password: admin123")
     print("  Role: admin")
     

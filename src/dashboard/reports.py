@@ -12,6 +12,6 @@ def generate_report_pdf(df: pd.DataFrame, output_path: str) -> str:
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w") as f:
-        f.write("Shikshasamvaad Report (placeholder)\n")
+        f.write("Shikshasamvad Report (placeholder)\n")
         f.write(f"Rows: {len(df)}\n")
     return str(out)

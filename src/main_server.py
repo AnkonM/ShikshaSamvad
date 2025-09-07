@@ -19,7 +19,7 @@ from src.database.sqlite_db import init_db
 def create_app():
     """Create the main Flask application"""
     app = Flask(__name__, static_folder='../static', static_url_path='')
-    app.secret_key = 'shikshasamvaad-secret-key-change-in-production'
+    app.secret_key = 'shikshasamvad-secret-key-change-in-production'
     
     # Enable CORS for frontend
     CORS(app, origins=['http://localhost:3000', 'http://localhost:8501', 'http://localhost:5000'], supports_credentials=True)
@@ -31,7 +31,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     
     # Initialize database
-    init_db("sqlite:///data/processed/shikshasamvaad.db", "src/database/schema.sql")
+    init_db("sqlite:///data/processed/shikshasamvad.db", "src/database/schema.sql")
     
     # Create default admin user if it doesn't exist
     create_default_admin(auth_manager)
@@ -179,7 +179,7 @@ def create_app():
     def health():
         return jsonify({
             'status': 'healthy',
-            'service': 'shikshasamvaad-main',
+            'service': 'shikshasamvad-main',
             'version': '1.0.0'
         })
     
@@ -196,19 +196,19 @@ def create_default_admin(auth_manager):
     conn = auth_manager.get_db_connection()
     try:
         admin_exists = conn.execute(
-            'SELECT id FROM users WHERE email = ?', ('admin@shikshasamvaad.com',)
+            'SELECT id FROM users WHERE email = ?', ('admin@shikshasamvad.com',)
         ).fetchone()
         
         if not admin_exists:
             auth_manager.create_user(
-                email='admin@shikshasamvaad.com',
+                email='admin@shikshasamvad.com',
                 password='admin123',
                 role='admin',
                 first_name='Admin',
                 last_name='User',
                 username='admin'
             )
-            print("✅ Default admin user created: admin@shikshasamvaad.com / admin123")
+            print("✅ Default admin user created: admin@shikshasamvad.com / admin123")
     finally:
         conn.close()
 
@@ -235,7 +235,7 @@ def main():
     print("  GET  /api/health - Health check")
     
     print("\n🔑 Default admin credentials:")
-    print("  Email: admin@shikshasamvaad.com")
+    print("  Email: admin@shikshasamvad.com")
     print("  Password: admin123")
     
     app.run(host="0.0.0.0", port=5000, debug=True)

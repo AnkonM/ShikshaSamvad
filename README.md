@@ -59,7 +59,7 @@ streamlit run src/dashboard/streamlit_app.py
 - **📊 Dashboard**: http://localhost:5000/dashboard.html
 - **🔧 API**: http://localhost:5000/api/health
 - **📈 Streamlit Dashboard**: http://localhost:8501 (if running)
-- **Default Admin**: admin@shikshasamvaad.com / admin123
+- **Default Admin**: admin@shikshasamvad.com / admin123
 
 ## User Roles
 - **Student**: View own data, chat with bot

@@ -16,7 +16,7 @@ def start_frontend_system():
     print("=" * 50)
     
     # Check if database exists
-    db_path = Path("data/processed/shikshasamvaad.db")
+    db_path = Path("data/processed/shikshasamvad.db")
     if not db_path.exists():
         print("📊 Database not found. Setting up system...")
         import subprocess
@@ -40,7 +40,7 @@ def start_frontend_system():
     print("  🔧 API Health: http://localhost:5000/api/health")
     
     print("\n🔑 Default Admin Credentials:")
-    print("  Email: admin@shikshasamvaad.com")
+    print("  Email: admin@shikshasamvad.com")
     print("  Password: admin123")
     
     print("\n📱 Frontend Features by Role:")

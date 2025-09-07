@@ -36,7 +36,7 @@ class User(UserMixin):
 class AuthManager:
     """Authentication manager using Flask-Login"""
     
-    def __init__(self, app=None, db_path="data/processed/shikshasamvaad.db"):
+    def __init__(self, app=None, db_path="data/processed/shikshasamvad.db"):
         self.db_path = db_path
         self.login_manager = LoginManager()
         self.login_manager.login_view = 'auth.login'

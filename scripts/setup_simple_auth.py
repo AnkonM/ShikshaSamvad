@@ -22,7 +22,7 @@ def setup_simple_auth():
     # Initialize database
     print("📊 Initializing database...")
     from src.database.sqlite_db import init_db
-    init_db("sqlite:///data/processed/shikshasamvaad.db", "src/database/schema.sql")
+    init_db("sqlite:///data/processed/shikshasamvad.db", "src/database/schema.sql")
     print("✅ Database initialized")
     
     # Generate sample data
@@ -50,7 +50,7 @@ def setup_simple_auth():
     print("3. Test the API endpoints")
     
     print("\n🔑 Default admin credentials:")
-    print("  Email: admin@shikshasamvaad.com")
+    print("  Email: admin@shikshasamvad.com")
     print("  Password: admin123")
     
     print("\n🌐 Services will be available at:")
