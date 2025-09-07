@@ -205,7 +205,8 @@ def create_default_admin(auth_manager):
                 password='admin123',
                 role='admin',
                 first_name='Admin',
-                last_name='User'
+                last_name='User',
+                username='admin'
             )
             print("✅ Default admin user created: admin@shikshasamvaad.com / admin123")
     finally:

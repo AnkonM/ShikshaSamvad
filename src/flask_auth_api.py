@@ -30,14 +30,15 @@ def register():
                 'message': 'Email already registered'
             }), 409
         
-        # Create user
+        # Create user (derive username from email if not provided)
         user_id = auth_manager.create_user(
             email=data['email'],
             password=data['password'],
             role=data.get('role', 'student'),
             first_name=data['first_name'],
             last_name=data['last_name'],
-            student_id=data.get('student_id')
+            student_id=data.get('student_id'),
+            username=data.get('username')
         )
         
         if user_id:

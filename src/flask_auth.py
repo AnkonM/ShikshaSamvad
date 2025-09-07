@@ -1,7 +1,7 @@
 """
 Flask-Login based authentication system for ShikshaSamvad
 """
-from flask import Flask
+from flask import Flask, jsonify
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
@@ -70,13 +70,14 @@ class AuthManager:
             ).fetchone()
             
             if user_data:
+                user_dict = dict(user_data)
                 return User(
-                    id=user_data['id'],
-                    email=user_data['email'],
-                    role=user_data['role'],
-                    first_name=user_data.get('first_name', ''),
-                    last_name=user_data.get('last_name', ''),
-                    student_id=user_data.get('student_id')
+                    id=user_dict['id'],
+                    email=user_dict['email'],
+                    role=user_dict['role'],
+                    first_name=user_dict.get('first_name', ''),
+                    last_name=user_dict.get('last_name', ''),
+                    student_id=user_dict.get('student_id')
                 )
             return None
         finally:
@@ -92,13 +93,14 @@ class AuthManager:
             ).fetchone()
             
             if user_data:
+                user_dict = dict(user_data)
                 return User(
-                    id=user_data['id'],
-                    email=user_data['email'],
-                    role=user_data['role'],
-                    first_name=user_data.get('first_name', ''),
-                    last_name=user_data.get('last_name', ''),
-                    student_id=user_data.get('student_id')
+                    id=user_dict['id'],
+                    email=user_dict['email'],
+                    role=user_dict['role'],
+                    first_name=user_dict.get('first_name', ''),
+                    last_name=user_dict.get('last_name', ''),
+                    student_id=user_dict.get('student_id')
                 )
             return None
         finally:
@@ -114,27 +116,32 @@ class AuthManager:
             ).fetchone()
             
             if user_data and check_password_hash(user_data['password_hash'], password):
+                user_dict = dict(user_data)
                 return User(
-                    id=user_data['id'],
-                    email=user_data['email'],
-                    role=user_data['role'],
-                    first_name=user_data.get('first_name', ''),
-                    last_name=user_data.get('last_name', ''),
-                    student_id=user_data.get('student_id')
+                    id=user_dict['id'],
+                    email=user_dict['email'],
+                    role=user_dict['role'],
+                    first_name=user_dict.get('first_name', ''),
+                    last_name=user_dict.get('last_name', ''),
+                    student_id=user_dict.get('student_id')
                 )
             return None
         finally:
             conn.close()
     
-    def create_user(self, email, password, role='student', first_name='', last_name='', student_id=None):
+    def create_user(self, email, password, role='student', first_name='', last_name='', student_id=None, username=None):
         """Create a new user"""
         conn = self.get_db_connection()
         try:
-            password_hash = generate_password_hash(password)
+            # Derive username from email if not provided
+            derived_username = username if username else (email.split('@')[0] if email and '@' in email else None)
+            if not derived_username:
+                raise ValueError('Username could not be determined')
+            password_hash = generate_password_hash(password, method='pbkdf2:sha256')
             cursor = conn.execute(
-                '''INSERT INTO users (email, password_hash, role, first_name, last_name, student_id, status)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                (email, password_hash, role, first_name, last_name, student_id, 'active')
+                '''INSERT INTO users (email, username, password_hash, role, first_name, last_name, student_id, status)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                (email, derived_username, password_hash, role, first_name, last_name, student_id, 'active')
             )
             conn.commit()
             return cursor.lastrowid
@@ -147,7 +154,7 @@ class AuthManager:
         """Update user password"""
         conn = self.get_db_connection()
         try:
-            password_hash = generate_password_hash(new_password)
+            password_hash = generate_password_hash(new_password, method='pbkdf2:sha256')
             conn.execute(
                 'UPDATE users SET password_hash = ? WHERE id = ?',
                 (password_hash, user_id)
