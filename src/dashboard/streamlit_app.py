@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-from .visualizations import risk_distribution, attendance_vs_risk
+from src.dashboard.visualizations import risk_distribution, attendance_vs_risk, course_trend, attribute_strengths
 import requests
 import json
 
@@ -83,14 +83,61 @@ elif user['role'] == 'admin':
     st.info("Admin Dashboard - Full system access")
 
 pred_path = Path("data/processed/risk_predictions.csv")
-if pred_path.exists():
-    df = pd.read_csv(pred_path)
-    st.success(f"Loaded predictions: {len(df)} rows")
-    st.plotly_chart(risk_distribution(df), use_container_width=True)
-    st.plotly_chart(attendance_vs_risk(df), use_container_width=True)
-    high_risk = df[df["dropout_risk"] >= 0.7].copy()
-    high_risk["anon_id"] = high_risk["student_id"].apply(lambda s: hash(s) % 100000)
-    st.subheader("High-Risk Students (Anonymized)")
-    st.dataframe(high_risk[["anon_id", "course", "dropout_risk", "risk_ci_lower", "risk_ci_upper"]])
+df_pred = pd.read_csv(pred_path) if pred_path.exists() else pd.DataFrame()
+
+raw_dir = Path("data/raw")
+assess_path = raw_dir / "assessments.csv"
+courses_path = raw_dir / "courses.csv"
+
+df_assess = pd.read_csv(assess_path) if assess_path.exists() else pd.DataFrame()
+df_courses = pd.read_csv(courses_path) if courses_path.exists() else pd.DataFrame()
+
+colA, colB = st.columns(2)
+
+with colA:
+    st.subheader("Performance Summary")
+    if not df_pred.empty:
+        # For students, filter to their id if available
+        if user['role'] == 'student' and 'student_id' in user and user['student_id']:
+            df_view = df_pred[df_pred["student_id"] == user['student_id']]
+        else:
+            df_view = df_pred.copy()
+        st.plotly_chart(risk_distribution(df_view), use_container_width=True)
+        st.plotly_chart(attendance_vs_risk(df_view), use_container_width=True)
+        high_risk = df_view[df_view["dropout_risk"] >= 0.7].copy()
+        if not high_risk.empty:
+            high_risk["anon_id"] = high_risk["student_id"].apply(lambda s: hash(s) % 100000)
+            st.subheader("High-Risk Students (Anonymized)")
+            st.dataframe(high_risk[["anon_id", "course", "dropout_risk", "risk_ci_lower", "risk_ci_upper"]])
+    else:
+        st.warning("No predictions found. Generate data and ingest.")
+
+with colB:
+    st.subheader("Course Trends and Attributes")
+    if df_assess.empty or df_courses.empty:
+        st.info("Assessments or courses data not found. Run data generation.")
+    else:
+        # Student scope
+        student_id = st.text_input("Student ID", value=(user.get('student_id') or 'S1000'))
+        course_codes = sorted(df_courses["course_code"].unique())
+        course_code = st.selectbox("Select course", course_codes)
+        st.plotly_chart(course_trend(df_assess, student_id, course_code), use_container_width=True)
+        st.plotly_chart(attribute_strengths(df_courses, course_code), use_container_width=True)
+
+st.divider()
+st.subheader("BNN Dropout Risk")
+if not df_pred.empty:
+    # Show a per-student summary row
+    if user['role'] == 'student' and user.get('student_id'):
+        sview = df_pred[df_pred["student_id"] == user['student_id']][["course", "dropout_risk", "risk_ci_lower", "risk_ci_upper"]]
+        st.dataframe(sview)
+    else:
+        st.dataframe(df_pred[["student_id", "course", "dropout_risk", "risk_ci_lower", "risk_ci_upper"]].head(50))
 else:
-    st.warning("No predictions found. Generate data and run training/inference.")
+    st.info("No BNN risk predictions available yet.")
+
+st.divider()
+st.subheader("NLP Chatbot")
+st.caption("This will open a chat interface in a modal/pop-out.")
+if st.button("Open Chatbot"):
+    st.info("Chatbot pop-out coming soon...")

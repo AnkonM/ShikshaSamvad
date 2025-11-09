@@ -59,14 +59,86 @@
                 
                 <!-- Role-based content -->
                 <div id="role-content" class="space-y-6">
+                    <!-- Unified Analytics -->
+                    <section class="space-y-6" id="analytics-section">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-slate-900">Performance Summary</h3>
+                                    <p class="text-xs text-slate-500">Real-time overview of attendance and grades.</p>
+                                </div>
+                                <span id="user-role-pill" class="text-xs uppercase tracking-wide bg-green-100 text-green-700 px-3 py-1 rounded-full"></span>
+                            </div>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-sm font-semibold text-slate-700 mb-2">Average Scores by Course</h4>
+                                    <canvas id="scoreChart" height="220"></canvas>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-slate-700 mb-2">Attendance by Course</h4>
+                                    <canvas id="attendanceChart" height="220"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-slate-900">Assessment Trend</h3>
+                                        <p class="text-xs text-slate-500">Track score progression across assessments.</p>
+                                    </div>
+                                    <div id="student-input-wrapper" class="hidden">
+                                        <label for="student-id-input" class="block text-xs text-slate-500">Student ID</label>
+                                        <input id="student-id-input" type="text" class="mt-1 border border-slate-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="S1000" />
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-3 mb-3">
+                                    <label for="course-select" class="text-sm text-slate-600">Course</label>
+                                    <select id="course-select" class="border border-slate-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></select>
+                                    <button id="load-trend" class="text-sm bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700">Load</button>
+                                </div>
+                                <canvas id="trendChart" height="240"></canvas>
+                            </div>
+
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-lg font-semibold text-slate-900 mb-4">Course Strengths & Weaknesses</h3>
+                                <canvas id="attributeChart" height="240"></canvas>
+                                <p class="text-xs text-slate-500 mt-3">Attribute weights from curriculum focus areas (problem solving, logical reasoning, retention, communication, collaboration).</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-slate-900">BNN Dropout Risk Overview</h3>
+                                <p class="text-xs text-slate-500">Higher percentages indicate increased probability of disengagement.</p>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-slate-200">
+                                    <thead class="bg-slate-50">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Student ID</th>
+                                            <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Course</th>
+                                            <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Risk %</th>
+                                            <th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Confidence Interval</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="risk-table-body" class="bg-white divide-y divide-slate-200">
+                                        <tr>
+                                            <td colspan="4" class="px-4 py-3 text-center text-slate-500">Loading risk data...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- Student Content -->
-                    <div id="student-content" class="hidden">
+                    <section id="student-content" class="hidden space-y-4">
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                             <h2 class="text-lg font-semibold text-blue-900 mb-2">Student Dashboard</h2>
                             <p class="text-blue-700">View your wellness data, chat with the AI counselor, and track your progress.</p>
                         </div>
-                        
-                        <!-- Chat Section -->
                         <div class="bg-white rounded-lg shadow p-6">
                             <h3 class="text-lg font-semibold text-slate-900 mb-4">AI Counselor Chat</h3>
                             <div id="chat-container" class="border border-slate-200 rounded-lg p-4 h-64 overflow-y-auto mb-4">
@@ -77,219 +149,350 @@
                                 <button id="send-chat" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Send</button>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
                     <!-- Counselor Content -->
-                    <div id="counselor-content" class="hidden">
+                    <section id="counselor-content" class="hidden">
                         <div class="bg-green-50 border border-green-200 rounded-lg p-4">
                             <h2 class="text-lg font-semibold text-green-900 mb-2">Counselor Dashboard</h2>
                             <p class="text-green-700">Monitor student wellness, view risk assessments, and manage interventions.</p>
                         </div>
-                        
-                        <!-- Risk Assessment Table -->
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-lg font-semibold text-slate-900 mb-4">Student Risk Assessments</h3>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-slate-200">
-                                    <thead class="bg-slate-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Student ID</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Course</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Risk Level</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Confidence</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="risk-table-body" class="bg-white divide-y divide-slate-200">
-                                        <tr>
-                                            <td colspan="5" class="px-6 py-4 text-center text-slate-500">Loading risk data...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    </section>
 
                     <!-- Faculty Content -->
-                    <div id="faculty-content" class="hidden">
+                    <section id="faculty-content" class="hidden">
                         <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
                             <h2 class="text-lg font-semibold text-orange-900 mb-2">Faculty Dashboard</h2>
                             <p class="text-orange-700">View class reports, student alerts, and academic performance insights.</p>
                         </div>
-                        
-                        <!-- Class Performance Chart -->
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-lg font-semibold text-slate-900 mb-4">Class Performance Overview</h3>
-                            <canvas id="performance-chart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
+                    </section>
 
                     <!-- Admin Content -->
-                    <div id="admin-content" class="hidden">
+                    <section id="admin-content" class="hidden">
                         <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
                             <h2 class="text-lg font-semibold text-purple-900 mb-2">Admin Dashboard</h2>
                             <p class="text-purple-700">Full system access, user management, and system analytics.</p>
                         </div>
-                        
-                        <!-- System Stats -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="bg-white rounded-lg shadow p-6">
-                                <h3 class="text-lg font-semibold text-slate-900 mb-2">Total Users</h3>
-                                <p id="total-users" class="text-3xl font-bold text-green-600">-</p>
-                            </div>
-                            <div class="bg-white rounded-lg shadow p-6">
-                                <h3 class="text-lg font-semibold text-slate-900 mb-2">Active Sessions</h3>
-                                <p id="active-sessions" class="text-3xl font-bold text-blue-600">-</p>
-                            </div>
-                            <div class="bg-white rounded-lg shadow p-6">
-                                <h3 class="text-lg font-semibold text-slate-900 mb-2">Risk Alerts</h3>
-                                <p id="risk-alerts" class="text-3xl font-bold text-red-600">-</p>
-                            </div>
-                        </div>
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Check authentication on page load
-        document.addEventListener('DOMContentLoaded', async function() {
+        let currentUser = null;
+        let scoreChart = null;
+        let attendanceChart = null;
+        let trendChart = null;
+        let attributeChart = null;
+
+        const courseSelect = document.getElementById('course-select');
+        const loadTrendBtn = document.getElementById('load-trend');
+        const studentInputWrapper = document.getElementById('student-input-wrapper');
+        const studentIdInput = document.getElementById('student-id-input');
+        const rolePill = document.getElementById('user-role-pill');
+
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Check authentication status via API
-                const response = await fetch('/api/auth/me', {
-                    credentials: 'include'
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    const user = data.user;
-                    
-                    // Store user info in localStorage for consistency
-                    localStorage.setItem('user', JSON.stringify(user));
-                    
-                    // Display user info
-                    document.getElementById('user-name').textContent = user.first_name || user.email;
-                    
-                    // Show role-specific content
-                    showRoleContent(user.role);
-                    
-                    // Load role-specific data
-                    loadRoleData(user.role);
-                } else {
-                    // Not authenticated, redirect to login
-                    window.location.href = 'login.html';
-                }
-            } catch (error) {
-                console.error('Authentication check failed:', error);
-                // On error, try to use localStorage as fallback
-                const user = JSON.parse(localStorage.getItem('user') || 'null');
-                if (!user) {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (!response.ok) {
                     window.location.href = 'login.html';
                     return;
                 }
-                
-                // Display user info
-                document.getElementById('user-name').textContent = user.first_name || user.email;
-                showRoleContent(user.role);
-                loadRoleData(user.role);
+
+                const data = await response.json();
+                currentUser = data.user;
+                localStorage.setItem('user', JSON.stringify(currentUser));
+
+                document.getElementById('user-name').textContent = currentUser.first_name || currentUser.email;
+                rolePill.textContent = currentUser.role;
+                showRoleContent(currentUser.role);
+
+                if (currentUser.role !== 'student' || !currentUser.student_id) {
+                    studentInputWrapper.classList.remove('hidden');
+                }
+
+                await renderPerformanceSummary();
+                await renderRiskTable();
+            } catch (error) {
+                console.error('Initialization failed:', error);
+                const cachedUser = JSON.parse(localStorage.getItem('user') || 'null');
+                if (!cachedUser) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                currentUser = cachedUser;
+                document.getElementById('user-name').textContent = currentUser.first_name || currentUser.email;
+                rolePill.textContent = currentUser.role;
+                showRoleContent(currentUser.role);
+                await renderPerformanceSummary();
+                await renderRiskTable();
             }
         });
 
         function showRoleContent(role) {
-            // Hide all role content
             document.querySelectorAll('[id$="-content"]').forEach(el => el.classList.add('hidden'));
-            
-            // Show specific role content
-            const roleElement = document.getElementById(role + '-content');
+            const roleElement = document.getElementById(`${role}-content`);
             if (roleElement) {
                 roleElement.classList.remove('hidden');
             }
         }
 
-        async function loadRoleData(role) {
+        async function renderPerformanceSummary() {
             try {
-                if (role === 'counselor' || role === 'faculty' || role === 'admin') {
-                    await loadRiskData();
+                const response = await fetch('/api/dashboard/performance-summary', { credentials: 'include' });
+                if (!response.ok) {
+                    courseSelect.innerHTML = '<option value="">No courses available</option>';
+                    updateCharts([], [], []);
+                    return;
                 }
-                
-                if (role === 'admin') {
-                    await loadAdminStats();
+
+                const { summary } = await response.json();
+                if (!summary || summary.length === 0) {
+                    courseSelect.innerHTML = '<option value="">No courses available</option>';
+                    updateCharts([], [], []);
+                    return;
                 }
+
+                const labels = summary.map(item => item.course_name || item.course_code);
+                const scores = summary.map(item => item.avg_score || 0);
+                const attendance = summary.map(item => item.attendance_pct ?? 0);
+
+                updateCharts(labels, scores, attendance);
+
+                courseSelect.innerHTML = summary.map(item => `
+                    <option value="${item.course_code}">${item.course_name || item.course_code}</option>
+                `).join('');
+
+                const defaultCourse = courseSelect.value;
+                await loadTrendData(defaultCourse);
+                await renderCourseAttributes(defaultCourse);
             } catch (error) {
-                console.error('Error loading role data:', error);
+                console.error('Failed to render performance summary:', error);
             }
         }
 
-        async function loadRiskData() {
-            try {
-                const response = await fetch('/api/dashboard/risk-data', {
-                    credentials: 'include'
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    displayRiskData(data.risk_data);
+        function updateCharts(labels, scores, attendance) {
+            const ctxScore = document.getElementById('scoreChart').getContext('2d');
+            const ctxAttendance = document.getElementById('attendanceChart').getContext('2d');
+
+            if (scoreChart) scoreChart.destroy();
+            if (attendanceChart) attendanceChart.destroy();
+
+            scoreChart = new Chart(ctxScore, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Average Score',
+                        data: scores,
+                        backgroundColor: '#22c55e',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
                 }
+            });
+
+            attendanceChart = new Chart(ctxAttendance, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Attendance %',
+                        data: attendance,
+                        backgroundColor: '#0ea5e9',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        async function loadTrendData(courseCode) {
+            if (!courseCode) return;
+
+            let studentId = studentIdInput.value.trim();
+            if (currentUser.role === 'student' && currentUser.student_id) {
+                studentId = currentUser.student_id;
+            }
+
+            const params = new URLSearchParams({ course_code: courseCode });
+            if (studentId) {
+                params.append('student_id', studentId);
+            }
+
+            try {
+                const response = await fetch(`/api/dashboard/assessments?${params.toString()}`, { credentials: 'include' });
+                if (!response.ok) {
+                    renderTrendChart([]);
+                    return;
+                }
+                const { assessments } = await response.json();
+                renderTrendChart(assessments || []);
             } catch (error) {
-                console.error('Error loading risk data:', error);
+                console.error('Failed to load assessment trend:', error);
+                renderTrendChart([]);
             }
         }
 
-        function displayRiskData(riskData) {
+        function renderTrendChart(data) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            if (trendChart) trendChart.destroy();
+
+            const labels = data.map(item => item.submitted_at || item.assessment_name);
+            const scores = data.map(item => item.score);
+
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Score',
+                        data: scores,
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        async function renderCourseAttributes(courseCode) {
+            if (!courseCode) return;
+            try {
+                const response = await fetch(`/api/dashboard/course-attributes?course_code=${courseCode}`, { credentials: 'include' });
+                if (!response.ok) {
+                    updateAttributeChart({});
+                    return;
+                }
+                const { attributes } = await response.json();
+                updateAttributeChart(attributes || {});
+            } catch (error) {
+                console.error('Failed to load course attributes:', error);
+                updateAttributeChart({});
+            }
+        }
+
+        function updateAttributeChart(attributes) {
+            const ctx = document.getElementById('attributeChart').getContext('2d');
+            if (attributeChart) attributeChart.destroy();
+
+            const labels = Object.keys(attributes);
+            const values = Object.values(attributes);
+
+            attributeChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Attribute Weight',
+                        data: values,
+                        backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                        borderColor: '#7C3AED',
+                        pointBackgroundColor: '#7C3AED'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            suggestedMax: 1
+                        }
+                    }
+                }
+            });
+        }
+
+        async function renderRiskTable() {
+            try {
+                const response = await fetch('/api/dashboard/risk-data', { credentials: 'include' });
+                if (!response.ok) {
+                    updateRiskTable([]);
+                    return;
+                }
+                const data = await response.json();
+                updateRiskTable(data.risk_data || []);
+            } catch (error) {
+                console.error('Failed to load risk data:', error);
+                updateRiskTable([]);
+            }
+        }
+
+        function updateRiskTable(rows) {
             const tbody = document.getElementById('risk-table-body');
-            
-            if (riskData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-slate-500">No risk data available</td></tr>';
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-3 text-center text-slate-500">No risk data available</td></tr>';
                 return;
             }
-            
-            tbody.innerHTML = riskData.map(student => {
-                const riskLevel = student.dropout_risk > 0.7 ? 'High' : student.dropout_risk > 0.4 ? 'Medium' : 'Low';
-                const riskColor = student.dropout_risk > 0.7 ? 'text-red-600' : student.dropout_risk > 0.4 ? 'text-yellow-600' : 'text-green-600';
-                
+
+            tbody.innerHTML = rows.map(item => {
+                const riskPercent = (item.dropout_risk * 100).toFixed(1);
+                const interval = `${(item.risk_ci_lower * 100).toFixed(1)}% - ${(item.risk_ci_upper * 100).toFixed(1)}%`;
+                const riskClass = item.dropout_risk > 0.7 ? 'text-red-600' : item.dropout_risk > 0.4 ? 'text-yellow-600' : 'text-green-600';
                 return `
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">${student.student_id || 'N/A'}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">${student.course || 'N/A'}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm ${riskColor} font-medium">${riskLevel}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">${(student.dropout_risk * 100).toFixed(1)}%</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                            <button class="text-green-600 hover:text-green-900">View Details</button>
-                        </td>
-                    </tr>
-                `;
+                        <td class="px-4 py-3 text-sm text-slate-900">${item.student_id || 'N/A'}</td>
+                        <td class="px-4 py-3 text-sm text-slate-900">${item.course || 'N/A'}</td>
+                        <td class="px-4 py-3 text-sm ${riskClass} font-medium">${riskPercent}%</td>
+                        <td class="px-4 py-3 text-sm text-slate-500">${interval}</td>
+                    </tr>`;
             }).join('');
         }
 
-        async function loadAdminStats() {
-            // Mock data for now - replace with actual API calls
-            document.getElementById('total-users').textContent = '150';
-            document.getElementById('active-sessions').textContent = '23';
-            document.getElementById('risk-alerts').textContent = '7';
-        }
+        loadTrendBtn.addEventListener('click', async () => {
+            const courseCode = courseSelect.value;
+            await loadTrendData(courseCode);
+            await renderCourseAttributes(courseCode);
+        });
 
-        // Chat functionality
-        document.getElementById('send-chat').addEventListener('click', async function() {
+        courseSelect.addEventListener('change', async () => {
+            const courseCode = courseSelect.value;
+            await renderCourseAttributes(courseCode);
+        });
+
+        document.getElementById('send-chat').addEventListener('click', async () => {
             const input = document.getElementById('chat-input');
             const message = input.value.trim();
-            
             if (!message) return;
-            
-            // Add user message to chat
+
             addChatMessage('You', message, 'user');
             input.value = '';
-            
+
             try {
                 const response = await fetch('/api/chatbot/chat', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify({ text: message })
                 });
-                
                 if (response.ok) {
                     const data = await response.json();
                     addChatMessage('AI Counselor', data.reply, 'ai');
@@ -298,6 +501,12 @@
                 }
             } catch (error) {
                 addChatMessage('System', 'Network error. Please check your connection.', 'system');
+            }
+        });
+
+        document.getElementById('chat-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('send-chat').click();
             }
         });
 
@@ -310,28 +519,14 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // Logout functionality
-        document.getElementById('logout-btn').addEventListener('click', async function() {
+        document.getElementById('logout-btn').addEventListener('click', async () => {
             try {
-                await fetch('/api/auth/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-                
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
+                await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
             } catch (error) {
                 console.error('Logout error:', error);
-                // Still redirect even if logout fails
+            } finally {
                 localStorage.removeItem('user');
                 window.location.href = 'login.html';
-            }
-        });
-
-        // Allow Enter key in chat input
-        document.getElementById('chat-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('send-chat').click();
             }
         });
     </script>

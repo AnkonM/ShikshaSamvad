@@ -93,3 +93,57 @@ CREATE INDEX IF NOT EXISTS idx_user_sessions_refresh_token ON user_sessions(refr
 CREATE INDEX IF NOT EXISTS idx_user_sessions_user_id ON user_sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_token ON password_reset_tokens(token);
 CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
+
+-- =====================
+-- Extended LMS schema
+-- =====================
+CREATE TABLE IF NOT EXISTS courses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  course_code VARCHAR(50) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  attributes_json TEXT, -- JSON string of attribute weights
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS assessments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id VARCHAR(50) NOT NULL,
+  course_code VARCHAR(50) NOT NULL,
+  assessment_type VARCHAR(50) NOT NULL, -- internal, assignment, quiz, midterm, final
+  assessment_name VARCHAR(100) NOT NULL,
+  due_date DATE,
+  submitted_at DATE,
+  max_score INTEGER NOT NULL,
+  score REAL NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (course_code) REFERENCES courses(course_code)
+);
+
+CREATE TABLE IF NOT EXISTS submissions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id VARCHAR(50) NOT NULL,
+  course_code VARCHAR(50) NOT NULL,
+  assessment_id INTEGER,
+  submitted_at DATE,
+  on_time BOOLEAN,
+  score_delta REAL, -- difference from previous submission or improvement
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (course_code) REFERENCES courses(course_code),
+  FOREIGN KEY (assessment_id) REFERENCES assessments(id)
+);
+
+CREATE TABLE IF NOT EXISTS attendance_records (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id VARCHAR(50) NOT NULL,
+  course_code VARCHAR(50) NOT NULL,
+  date DATE NOT NULL,
+  present BOOLEAN NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (course_code) REFERENCES courses(course_code)
+);
+
+-- Helpful indexes
+CREATE INDEX IF NOT EXISTS idx_assessments_student_course ON assessments(student_id, course_code);
+CREATE INDEX IF NOT EXISTS idx_submissions_student_course ON submissions(student_id, course_code);
+CREATE INDEX IF NOT EXISTS idx_attendance_student_course ON attendance_records(student_id, course_code);

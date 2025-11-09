@@ -139,7 +139,7 @@
                     const data = await response.json();
                     // Store user info in localStorage for dashboard access
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    // Redirect to dashboard
+                    // Redirect to in-app dashboard
                     window.location.href = 'dashboard.html';
                 } else {
                     const errorData = await response.json();

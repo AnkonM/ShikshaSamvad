@@ -51,6 +51,46 @@ def ingest_sqlite(df: pd.DataFrame, uri: str, schema_path: str):
     risk_df = create_risk_predictions(df)
     risk_df.to_sql("risk_scores", engine, if_exists="append", index=False)
 
+def ingest_extended_lms(uri: str, schema_path: str, clear_existing: bool = False):
+    """Ingest extended LMS CSVs into normalized tables"""
+    db_path = Path(uri.replace("sqlite:///", ""))
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    init_db(uri, schema_path)
+    engine = get_engine(uri)
+
+    raw_dir = Path("data/raw")
+    courses = pd.read_csv(raw_dir / "courses.csv")
+    assessments = pd.read_csv(raw_dir / "assessments.csv")
+    submissions = pd.read_csv(raw_dir / "submissions.csv")
+    attendance = pd.read_csv(raw_dir / "attendance.csv")
+
+    # Ensure date columns are strings (SQLite TEXT)
+    for df_local, cols in [
+        (assessments, ["due_date", "submitted_at"]),
+        (submissions, ["submitted_at"]),
+        (attendance, ["date"]),
+    ]:
+        for c in cols:
+            if c in df_local.columns:
+                df_local[c] = pd.to_datetime(df_local[c]).dt.date.astype(str)
+
+    # Courses are reference data - replace if exists
+    courses.to_sql("courses", engine, if_exists="replace", index=False)
+    
+    # Clear transactional tables if requested
+    if clear_existing:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text("DELETE FROM assessments"))
+            conn.execute(text("DELETE FROM submissions"))
+            conn.execute(text("DELETE FROM attendance_records"))
+            conn.commit()
+    
+    # Append transactional data (assessments, submissions, attendance)
+    assessments.to_sql("assessments", engine, if_exists="append", index=False)
+    submissions.to_sql("submissions", engine, if_exists="append", index=False)
+    attendance.to_sql("attendance_records", engine, if_exists="append", index=False)
+
 def ingest_firebase(df: pd.DataFrame, credentials_path: str):
     for _, row in df.iterrows():
         push_document("risk_scores", row.to_dict(), credentials_path=credentials_path)
@@ -62,12 +102,16 @@ if __name__ == "__main__":
     ap.add_argument("--sqlite_uri", default="sqlite:///data/processed/shikshasamvad.db")
     ap.add_argument("--firebase_credentials", default="config/firebase_config.json")
     ap.add_argument("--schema", default="src/database/schema.sql")
+    ap.add_argument("--extended", action="store_true", help="Also ingest extended LMS tables")
+    ap.add_argument("--clear", action="store_true", help="Clear existing transactional data before ingesting")
     args = ap.parse_args()
 
     df = pd.read_csv(args.csv)
     if args.backend == "sqlite":
         ingest_sqlite(df, args.sqlite_uri, args.schema)
-        print("Risk predictions ingested into SQLite.")
+        if args.extended:
+            ingest_extended_lms(args.sqlite_uri, args.schema, clear_existing=args.clear)
+        print("Risk predictions and extended LMS ingested into SQLite.")
     else:
         # For Firebase, also convert to risk predictions
         risk_df = create_risk_predictions(df)
